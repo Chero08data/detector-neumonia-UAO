@@ -3,9 +3,11 @@
 
 ######LIBRERIAS REQUERIDAS########
 import tensorflow as tf 
-import pydicom 
 from PIL import Image, ImageTk
+from tensorflow.keras import backend as K
 ###################################
+
+import cv2
 from tkinter import *
 from tkinter import ttk, font, filedialog, Entry
 from tkinter.messagebox import askokcancel, showinfo, WARNING
@@ -19,8 +21,15 @@ import numpy as np
 import time
 tf.compat.v1.disable_eager_execution()
 tf.compat.v1.experimental.output_all_intermediates(True)
-import cv2
 
+
+###### Importación de módulos ######
+from reader import read_dicom_file, read_jpg_file
+from preprocess import preprocess
+from model_loader import model_fun
+
+# se carga el modelo UNA sola vez
+model = model_fun()
 
 
 
@@ -73,6 +82,8 @@ def predict(array):
     return (label, proba, heatmap)
 
 
+##### Estas funciones comentadas se volvieron módulos: preprocess y reader ######
+'''
 def read_dicom_file(path):
     #img = dicom.read_file(path)
     img = pydicom.dcmread(path) # corregido
@@ -85,7 +96,6 @@ def read_dicom_file(path):
     img_RGB = cv2.cvtColor(img2, cv2.COLOR_GRAY2RGB)
     return img_RGB, img2show
 
-
 def read_jpg_file(path):
     img = cv2.imread(path)
     img_array = np.asarray(img)
@@ -95,7 +105,6 @@ def read_jpg_file(path):
     img2 = np.uint8(img2)
     return img2, img2show
 
-
 def preprocess(array):
     array = cv2.resize(array, (512, 512))
     array = cv2.cvtColor(array, cv2.COLOR_BGR2GRAY)
@@ -104,7 +113,7 @@ def preprocess(array):
     array = array / 255
     array = np.expand_dims(array, axis=-1)
     array = np.expand_dims(array, axis=0)
-    return array
+    return array '''
 
 
 class App:
